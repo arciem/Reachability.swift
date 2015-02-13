@@ -99,7 +99,9 @@ class Reachability: NSObject, Printable {
         localWifiAddress.sin_family = sa_family_t(AF_INET)
         
         // IN_LINKLOCALNETNUM is defined in <netinet/in.h> as 169.254.0.0
-        localWifiAddress.sin_addr.s_addr = in_addr_t(Int64(0xA9FE0000).bigEndian)
+        var addr = in_addr()
+        inet_aton("169.254.0.0".cStringUsingEncoding(NSUTF8StringEncoding), &addr)
+        localWifiAddress.sin_addr.s_addr = addr.s_addr
         
         let ref = withUnsafePointer(&localWifiAddress) {
             SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, UnsafePointer($0)).takeRetainedValue()

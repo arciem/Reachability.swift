@@ -30,16 +30,16 @@ import Foundation
 
 let ReachabilityChangedNotification = "ReachabilityChangedNotification"
 
-class Reachability: NSObject, Printable {
+public class Reachability: NSObject, Printable {
     
     typealias NetworkReachable = (Reachability) -> ()
     typealias NetworkUneachable = (Reachability) -> ()
 
-    enum NetworkStatus: Printable {
+    public enum NetworkStatus: Printable, DataflowⓋ {
         
         case NotReachable, ReachableViaWiFi, ReachableViaWWAN
         
-        var description: String {
+        public var description: String {
             switch self {
             case .ReachableViaWWAN:
                 return "Cellular"
@@ -48,6 +48,10 @@ class Reachability: NSObject, Printable {
             case .NotReachable:
                 return "No Connection"
             }
+        }
+
+        public init() {
+            self = .NotReachable
         }
     }
     
@@ -321,7 +325,7 @@ class Reachability: NSObject, Printable {
         return 0
     }
     
-    override var description: String {
+    public override var description: String {
         
         var W: String
         if isRunningOnDevice {

@@ -30,16 +30,16 @@ import Foundation
 
 let ReachabilityChangedNotification = "ReachabilityChangedNotification"
 
-class Reachability: NSObject, Printable {
+public class Reachability: NSObject, Printable {
     
     typealias NetworkReachable = (Reachability) -> ()
     typealias NetworkUneachable = (Reachability) -> ()
 
-    enum NetworkStatus: Printable {
+    public enum NetworkStatus: Printable, DataflowⓋ {
         
         case NotReachable, ReachableViaWiFi, ReachableViaWWAN
         
-        var description: String {
+        public var description: String {
             switch self {
             case .ReachableViaWWAN:
                 return "Cellular"
@@ -48,6 +48,10 @@ class Reachability: NSObject, Printable {
             case .NotReachable:
                 return "No Connection"
             }
+        }
+
+        public init() {
+            self = .NotReachable
         }
     }
     
@@ -99,7 +103,9 @@ class Reachability: NSObject, Printable {
         localWifiAddress.sin_family = sa_family_t(AF_INET)
         
         // IN_LINKLOCALNETNUM is defined in <netinet/in.h> as 169.254.0.0
-        localWifiAddress.sin_addr.s_addr = in_addr_t(Int64(0xA9FE0000).bigEndian)
+        var addr = in_addr()
+        inet_aton("169.254.0.0".cStringUsingEncoding(NSUTF8StringEncoding), &addr)
+        localWifiAddress.sin_addr.s_addr = addr.s_addr
         
         let ref = withUnsafePointer(&localWifiAddress) {
             SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, UnsafePointer($0)).takeRetainedValue()
@@ -319,7 +325,7 @@ class Reachability: NSObject, Printable {
         return 0
     }
     
-    override var description: String {
+    public override var description: String {
         
         var W: String
         if isRunningOnDevice {

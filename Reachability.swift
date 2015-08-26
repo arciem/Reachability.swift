@@ -245,7 +245,7 @@ public class Reachability: NSObject {
     
     private func isReachableWithTest(test: (SCNetworkReachabilityFlags) -> (Bool)) -> Bool {
         var flags = SCNetworkReachabilityFlags(rawValue: 0)
-        let gotFlags = SCNetworkReachabilityGetFlags(reachabilityRef, &flags) != 0
+        let gotFlags = SCNetworkReachabilityGetFlags(reachabilityRef, &flags)
         if gotFlags {
             return test(flags)
         }
@@ -315,7 +315,7 @@ public class Reachability: NSObject {
     
     private var reachabilityFlags: SCNetworkReachabilityFlags {
         var flags = SCNetworkReachabilityFlags(rawValue: 0)
-        if SCNetworkReachabilityGetFlags(reachabilityRef, &flags) != 0 {
+        if SCNetworkReachabilityGetFlags(reachabilityRef, &flags) {
             return flags
         } else {
             return SCNetworkReachabilityFlags(rawValue: 0)

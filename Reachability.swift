@@ -179,7 +179,7 @@ public class Reachability: NSObject {
     
     // MARK: - *** Private methods ***
     private var isRunningOnDevice: Bool = {
-        #if (arch(i386) || arch(x86_64)) && os(iOS)
+        #if (arch(i386) || arch(x86_64)) && (os(iOS) || os(tvOS))
             return false
             #else
             return true
